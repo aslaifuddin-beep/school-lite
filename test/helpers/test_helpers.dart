@@ -1,8 +1,11 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:school_lite/app.dart';
+import 'package:school_lite/core/db/app_database.dart';
+import 'package:school_lite/core/db/database_provider.dart';
 import 'package:school_lite/core/security/local_auth_service.dart';
 import 'package:school_lite/core/security/secure_token_store.dart';
 import 'package:school_lite/core/security/security_providers.dart';
@@ -65,13 +68,21 @@ List<Override> baseOverrides(SharedPreferences prefs) => [
       localAuthServiceProvider.overrideWithValue(FakeLocalAuthService()),
     ];
 
-/// حاوية اختبار جاهزة مع تنظيف تلقائي.
+/// حاوية اختبار جاهزة مع تنظيف تلقائي وقاعدة بيانات في الذاكرة
+/// (لتفادي مسارات المنصة الأصلية مثل path_provider).
 Future<ProviderContainer> createContainer({
   Map<String, Object> prefsValues = const {},
 }) async {
   final prefs = await mockPrefs(prefsValues);
-  final container = ProviderContainer(overrides: baseOverrides(prefs));
-  addTearDown(container.dispose);
+  final db = AppDatabase.forTesting(NativeDatabase.memory());
+  final container = ProviderContainer(overrides: [
+    ...baseOverrides(prefs),
+    databaseProvider.overrideWithValue(db),
+  ]);
+  addTearDown(() async {
+    container.dispose();
+    await db.close();
+  });
   return container;
 }
 

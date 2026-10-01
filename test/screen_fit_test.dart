@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:school_lite/core/l10n/app_strings.dart';
+import 'package:school_lite/features/accounts/presentation/quick_profile_switcher.dart';
 
 import 'helpers/test_helpers.dart';
 
@@ -34,7 +35,13 @@ void main() {
       expect(find.textContaining(AppStrings.welcomeBack), findsWidgets);
       // الشريط السريع يعرض حساباتيْن (الحرفان الأولان من الاسم).
       expect(find.text('أع'), findsWidgets);
-      expect(find.text('سأ'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(QuickProfileSwitcher),
+          matching: find.text('سأ'),
+        ),
+        findsOneWidget,
+      );
       // لا أخطاء overflow أو تجاوز نصوص.
       expect(tester.takeException(), isNull);
 

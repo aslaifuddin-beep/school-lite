@@ -97,6 +97,19 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Bump plugin compileSdk to 36
+        run: |
+          PC="${PUB_CACHE:-$HOME/.pub-cache}"
+          find "$PC/hosted" -type f \( -path '*/android/build.gradle' -o -path '*/android/build.gradle.kts' \) 2>/dev/null | while read -r f; do
+            if [[ "$f" == *.kts ]]; then
+              sed -i -E 's/compileSdk[[:space:]]*=?[[:space:]]*(3[0-5]|[12][0-9]|[1-9])\b/compileSdk = 36/g' "$f"
+            else
+              sed -i -E 's/compileSdk[[:space:]]*=?[[:space:]]*(3[0-5]|[12][0-9]|[1-9])\b/compileSdk 36/g' "$f"
+            fi
+          done
+          echo '--- plugin compileSdk after bump ---'
+          grep -RIn --include='build.gradle*' 'compileSdk' "$PC/hosted" 2>/dev/null | head -40 || true
+
       - name: Generate Drift database code
         run: dart run build_runner build --delete-conflicting-outputs
 
