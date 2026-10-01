@@ -1,0 +1,105 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Show environment
+        run: flutter --version && dart --version
+
+      - name: Create Android platform files
+        run: flutter create --project-name school_lite --org com.schoollite --platforms=android .
+
+      - name: Set minSdk 24 + Arabic app label
+        run: |
+          for f in android/app/build.gradle android/app/build.gradle.kts; do
+            [ -f "$f" ] || continue
+            sed -i -E 's/^[[:space:]]*minSdkVersion[[:space:]]+.*/            minSdkVersion 24/' "$f"
+            sed -i -E 's/^([[:space:]]*)minSdk([[:space:]]*=)[[:space:]]*.*/\1minSdk\2 24/' "$f"
+          done
+          MANIFEST=$(find android/app/src/main -name AndroidManifest.xml | head -1)
+          if [ -n "$MANIFEST" ]; then
+            sed -i -E 's/android:label="[^"]*"/android:label="مدرستي"/' "$MANIFEST"
+          fi
+          STRINGS=$(find android/app/src/main/res -name strings.xml | head -1)
+          if [ -n "$STRINGS" ]; then
+            sed -i -E 's#(<string name="app_name">)[^<]*(</string>)#\1مدرستي\2#' "$STRINGS"
+          fi
+          echo '--- verification ---'
+          grep -RIn 'minSdk' android/app/build.gradle* || true
+          grep -RIn 'android:label\|app_name' "$MANIFEST" "$STRINGS" 2>/dev/null || true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate Drift database code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Verify generated database file
+        run: |
+          test -f lib/core/db/app_database.g.dart
+          echo 'OK: lib/core/db/app_database.g.dart generated'
+
+      - name: Analyze (informational)
+        id: analyze
+        continue-on-error: true
+        run: flutter analyze
+
+      - name: Test (informational)
+        id: test
+        continue-on-error: true
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Show APK info
+        run: ls -lh build/app/outputs/flutter-apk/ && sha256sum build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: school-lite-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo '## Build summary — school-lite'
+            echo "- flutter analyze: \`${{ steps.analyze.outcome }}\`"
+            echo "- flutter test: \`${{ steps.test.outcome }}\`"
+            echo '- APK artifact: **school-lite-apk** (app-release.apk, retention 30 days)'
+          } >> "$GITHUB_STEP_SUMMARY"

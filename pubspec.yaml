@@ -1,0 +1,71 @@
+# تطبيق «مدرستي» — بديل Moodle تعليمي سريع (Offline-First، عربي RTL بالكامل)
+name: school_lite
+description: تطبيق تعليمي عربي سريع وعالي الأداء بديل لتطبيق Moodle — يعمل بدون إنترنت.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+# ملاحظة: intl مضبوط على any لتفادي تعارض الإصدارات مع flutter_localizations
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # إدارة الحالة — Riverpod
+  flutter_riverpod: ^2.6.1
+
+  # الشبكة: Dio + كاش HTTP
+  dio: ^5.7.0
+  dio_cache_interceptor: ^3.5.0
+
+  # قاعدة البيانات المحلية (Offline-First)
+  drift: ^2.22.1
+  sqlite3_flutter_libs: ^0.5.28
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
+  # الأمان: توكنات + بصمة + تشفير PIN
+  flutter_secure_storage: ^9.2.2
+  local_auth: ^2.3.0
+  crypto: ^3.0.6
+
+  # الشبكة الخلفية والمزامنة
+  connectivity_plus: ^6.1.0
+  workmanager: ^0.5.2
+
+  # الإشعارات الذكية (لكل حساب)
+  flutter_local_notifications: ^18.0.1
+
+  # الملفات والمرفقات (بدون WebView)
+  file_picker: ^8.1.4
+  open_filex: ^4.5.0
+
+  # إعدادات خفيفة + صور مخزّنة
+  shared_preferences: ^2.3.3
+  cached_network_image: ^3.4.1
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  drift_dev: ^2.22.1
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+  # خط عربي احترافي (Tajawal) — مضمّن محلياً ليعمل بدون إنترنت
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Tajawal-Black.ttf
+          weight: 900
