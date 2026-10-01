@@ -118,14 +118,12 @@ jobs:
           test -f lib/core/db/app_database.g.dart
           echo 'OK: lib/core/db/app_database.g.dart generated'
 
-      - name: Analyze (informational)
+      - name: Analyze
         id: analyze
-        continue-on-error: true
         run: flutter analyze
 
-      - name: Test (informational)
+      - name: Test
         id: test
-        continue-on-error: true
         run: flutter test
 
       - name: Build release APK

@@ -18,10 +18,7 @@ const kBackgroundSyncTaskName = 'school_lite_sync_v1';
 /// اختيارية: فشلها لا يمسّ التطبيق أبداً (المزامنة الأمامية تكفي).
 Future<void> initBackgroundSync() async {
   try {
-    await Workmanager().initialize(
-      _dispatchCallback,
-      isInDebugMode: false,
-    );
+    await Workmanager().initialize(_dispatchCallback);
     await Workmanager().registerPeriodicTask(
       kBackgroundSyncTaskName,
       kBackgroundSyncTaskName,
