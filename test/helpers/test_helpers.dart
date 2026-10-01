@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:school_lite/app.dart';
 import 'package:school_lite/core/security/local_auth_service.dart';
@@ -9,6 +8,7 @@ import 'package:school_lite/core/security/secure_token_store.dart';
 import 'package:school_lite/core/security/security_providers.dart';
 import 'package:school_lite/core/storage/prefs_provider.dart';
 import 'package:school_lite/features/accounts/application/accounts_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// مخزن توكنات وهمي للاختبارات (بدون منصة أصلية).
 class FakeSecureTokenStore implements SecureTokenStore {

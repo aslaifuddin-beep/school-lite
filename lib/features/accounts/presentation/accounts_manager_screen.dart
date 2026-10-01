@@ -173,7 +173,7 @@ class _AccountTile extends ConsumerWidget {
                 tooltip: AppStrings.edit,
                 onSelected: (value) async {
                   if (value == 'activate') {
-                    ref
+                    await ref
                         .read(activeAccountIdProvider.notifier)
                         .select(account.id);
                   } else if (value == 'delete') {

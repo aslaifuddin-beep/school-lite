@@ -8,7 +8,6 @@ import '../../../core/network/demo_content_source.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/network/moodle_content_source.dart';
 import '../../../core/security/secure_token_store.dart';
-import '../../../core/security/security_providers.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../features/accounts/application/accounts_providers.dart';
 import '../../../features/accounts/domain/account.dart';

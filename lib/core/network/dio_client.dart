@@ -32,7 +32,9 @@ class DioClient {
 
   final Dio dio;
 
-  Future<void> close() => dio.close(force: true);
+  Future<void> close() async {
+    dio.close(force: true);
+  }
 }
 
 /// هل هذا خطأ شبكة (انقطع الاتصال) أم خطأ من الخادم؟

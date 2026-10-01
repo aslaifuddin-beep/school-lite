@@ -38,7 +38,11 @@ jobs:
         run: flutter --version && dart --version
 
       - name: Create Android platform files
-        run: flutter create --project-name school_lite --org com.schoollite --platforms=android .
+        run: |
+          flutter create --project-name school_lite --org com.schoollite --platforms=android .
+          rm -f test/widget_test.dart
+          echo '--- test files ---'
+          ls -1 test/
 
       - name: Set minSdk 24 + Arabic app label
         run: |

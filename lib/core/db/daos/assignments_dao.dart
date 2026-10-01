@@ -77,7 +77,7 @@ class AssignmentsDao {
         // حالة محلية معلّقة تُحفظ كما هي، وإلا تُفضَّل قيمة الخادم
         // مع المحافظة على القديم إذا لم يُرسل الخادم هذا الحقل.
         final status = keepLocalState
-            ? local!.status
+            ? local.status
             : (dto.status != null
                 ? _mapStatus(dto.status)
                 : local?.status ?? 'not_submitted');
@@ -96,13 +96,13 @@ class AssignmentsDao {
                 status: Value(status),
                 pendingSync: Value(keepLocalState),
                 onlineText: Value(keepLocalState
-                    ? local!.onlineText
+                    ? local.onlineText
                     : dto.onlineText ?? local?.onlineText),
                 gradeText: Value(keepLocalState
-                    ? local!.gradeText
+                    ? local.gradeText
                     : dto.gradeText ?? local?.gradeText),
                 submittedAt: Value(keepLocalState
-                    ? local!.submittedAt
+                    ? local.submittedAt
                     : dto.submittedAt ?? local?.submittedAt),
                 updatedAt: now,
               ),

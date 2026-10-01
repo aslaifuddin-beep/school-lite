@@ -18,7 +18,7 @@ class Courses extends Table {
   TextColumn get shortName => text().withDefault(const Constant(''))();
   TextColumn get summary => text().withDefault(const Constant(''))();
   TextColumn get imageUrl => text().nullable()();
-  DoubleColumn get progress => double().nullable()();
+  RealColumn get progress => real().nullable()();
   IntColumn get enrolledCount => integer().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
 

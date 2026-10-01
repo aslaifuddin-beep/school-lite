@@ -109,7 +109,7 @@ class NotificationsDao {
   }) async {
     await db.into(db.localNotifications).insert(
           LocalNotificationsCompanion.insert(
-            id: rowId(accountId, 0) + '#$id',
+            id: '${rowId(accountId, 0)}#$id',
             accountId: accountId,
             title: title,
             body: Value(body),
