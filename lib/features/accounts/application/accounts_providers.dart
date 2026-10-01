@@ -122,15 +122,7 @@ class ActiveAccountIdController extends Notifier<String?> {
   static const _key = 'active_account_id_v1';
 
   @override
-  String? build() {
-    final prefs = ref.watch(sharedPrefsProvider);
-    final accounts = ref.watch(accountsProvider);
-    if (accounts.isEmpty) return null;
-
-    final saved = prefs.getString(_key);
-    if (saved != null && accounts.any((a) => a.id == saved)) return saved;
-    return accounts.first.id;
-  }
+  String? build() => ref.watch(sharedPrefsProvider).getString(_key);
 
   Future<void> select(String? id) async {
     state = id;

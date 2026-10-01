@@ -26,7 +26,7 @@ Future<void> initBackgroundSync() async {
       kBackgroundSyncTaskName,
       kBackgroundSyncTaskName,
       frequency: const Duration(minutes: 30),
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       constraints: Constraints(networkType: NetworkType.connected),
     );
   } catch (_) {

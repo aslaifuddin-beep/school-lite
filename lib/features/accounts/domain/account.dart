@@ -37,7 +37,14 @@ class Account {
       final word = parts.first;
       return word.substring(0, word.length.clamp(0, 2));
     }
-    return '${parts.first[0]}${parts.last[0]}';
+    return '${_firstLetter(parts.first)}${_firstLetter(parts.last)}';
+  }
+
+  /// أول حرف من كلمة، مع تجاهل «ال» التعريف (العلي ← ع).
+  static String _firstLetter(String word) {
+    var w = word;
+    if (w.length > 2 && w.startsWith('ال')) w = w.substring(2);
+    return w[0];
   }
 
   Account copyWith({

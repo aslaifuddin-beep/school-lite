@@ -33,6 +33,11 @@ void main() {
 
   testWidgets('إضافة حساب تجريبي ينقل إلى الهيكل الرئيسي العربي',
       (tester) async {
+    // زر «وضع العرض» أسفل محتوى الشاشة — نضمن ظهوره على ارتفاع كافٍ.
+    tester.view.physicalSize = const Size(800, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
     final container = await createContainer();
     await tester.pumpWidget(appWithContainer(container));
     await tester.pumpAndSettle();

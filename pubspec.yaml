@@ -34,7 +34,7 @@ dependencies:
 
   # الشبكة الخلفية والمزامنة
   connectivity_plus: ^6.1.0
-  workmanager: ^0.5.2
+  workmanager: ^0.10.10
 
   # الإشعارات الذكية (لكل حساب)
   flutter_local_notifications: ^18.0.1

@@ -63,6 +63,37 @@ jobs:
           grep -RIn 'minSdk' android/app/build.gradle* || true
           grep -RIn 'android:label\|app_name' "$MANIFEST" "$STRINGS" 2>/dev/null || true
 
+      - name: Enable core library desugaring
+        run: |
+          if [ -f android/app/build.gradle.kts ]; then
+            {
+              echo 'android {'
+              echo '    compileOptions {'
+              echo '        isCoreLibraryDesugaringEnabled = true'
+              echo '    }'
+              echo '}'
+              echo 'dependencies {'
+              echo '    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+              echo '}'
+            } >> android/app/build.gradle.kts
+          elif [ -f android/app/build.gradle ]; then
+            {
+              echo 'android {'
+              echo '    compileOptions {'
+              echo '        coreLibraryDesugaringEnabled true'
+              echo '    }'
+              echo '}'
+              echo 'dependencies {'
+              echo '    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"'
+              echo '}'
+            } >> android/app/build.gradle
+          else
+            echo 'No app build.gradle found' >&2
+            exit 1
+          fi
+          echo '--- tail of app gradle ---'
+          tail -n 14 android/app/build.gradle*
+
       - name: Install dependencies
         run: flutter pub get
 

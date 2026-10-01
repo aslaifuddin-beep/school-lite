@@ -31,7 +31,7 @@ void main() {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: const Scaffold(
+          home: Scaffold(
             appBar: AppBar(title: QuickProfileSwitcher()),
           ),
         ),
@@ -41,11 +41,11 @@ void main() {
 
     // الحسابان ظاهران بحرفي الاسم.
     expect(find.text('أع'), findsOneWidget);
-    expect(find.text('سأ'), findsOneWidget);
-    expect(container.read(activeAccountIdProvider), accounts.first.id);
+    expect(find.text('سع'), findsOneWidget);
+    expect(container.read(activeAccountIdProvider), accounts.last.id);
 
     // ضغطة على الحساب الثاني ← تبديل فوري.
-    await tester.tap(find.text('سأ'));
+    await tester.tap(find.text('سع'));
     await tester.pumpAndSettle();
     expect(container.read(activeAccountIdProvider), accounts.last.id);
 

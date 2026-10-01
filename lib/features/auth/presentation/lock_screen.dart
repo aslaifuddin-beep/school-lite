@@ -73,13 +73,13 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     });
   }
 
-  Future<void> _verify() async {
+  void _verify() {
     final ok = ref.read(pinStoreProvider).verify(_entered);
     if (ok) {
-      await HapticFeedback.mediumImpact();
+      HapticFeedback.mediumImpact();
       _unlock();
     } else {
-      await HapticFeedback.vibrate();
+      HapticFeedback.vibrate();
       setState(() {
         _errorText = AppStrings.wrongPin;
         _entered = '';
