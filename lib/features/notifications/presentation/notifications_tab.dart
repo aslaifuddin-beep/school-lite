@@ -35,7 +35,11 @@ class _ReadAllButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: null,
-      child: const Text(AppStrings.markAllRead),
+      child: const Text(
+        AppStrings.markAllRead,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }
