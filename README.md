@@ -31,8 +31,9 @@
   1. توليد كود قاعدة البيانات (`dart run build_runner build`) والتحقق من الملف المولَّد.
   2. `flutter analyze` — **إلزامي** (0 ملاحظات توقف البناء).
   3. `flutter test` — **إلزامي** (30 اختباراً: RTL، الشاشات، الحسابات، القفل، القاعدة، المزامنة، ملاءمة الشاشات).
-  4. `flutter build apk --release` (Java 17، minSdk 24، core library desugaring).
-  5. رفع نتيجة البناء كـ Artifact باسم `school-lite-apk`.
+  4. `flutter build apk --release --no-tree-shake-icons` — **Fat APK** واحد يشمل `arm64-v8a` و `armeabi-v7a` (Java 17، minSdk 21، core library desugaring).
+  5. توقيع ثابت عبر `debug.keystore` محفوظ بـ `actions/cache` (كل عمليات البناء توقّع بنفس المفتاح → التثبيت المتتالي بلا رفض التوقيع).
+  6. رفع نتيجة البناء كـ Artifact باسم `school-lite-apk`.
 - **للتحميل من Actions**: صفحة [Actions](https://github.com/aslaifuddin-beep/school-lite/actions) ← آخر Run ناجح ← في الأسفل **Artifacts** ← حمّل `school-lite-apk`.
 
 ---

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: build-apk-${{ github.ref }}
@@ -21,6 +22,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Cache Android debug keystore (stable release signature)
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: android-debug-keystore-v1
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -44,12 +51,12 @@ jobs:
           echo '--- test files ---'
           ls -1 test/
 
-      - name: Set minSdk 24 + Arabic app label
+      - name: Set minSdk 21 + Arabic app label
         run: |
           for f in android/app/build.gradle android/app/build.gradle.kts; do
             [ -f "$f" ] || continue
-            sed -i -E 's/^[[:space:]]*minSdkVersion[[:space:]]+.*/            minSdkVersion 24/' "$f"
-            sed -i -E 's/^([[:space:]]*)minSdk([[:space:]]*=)[[:space:]]*.*/\1minSdk\2 24/' "$f"
+            sed -i -E 's/^[[:space:]]*minSdkVersion[[:space:]]+.*/            minSdkVersion 21/' "$f"
+            sed -i -E 's/^([[:space:]]*)minSdk([[:space:]]*=)[[:space:]]*.*/\1minSdk\2 21/' "$f"
           done
           MANIFEST=$(find android/app/src/main -name AndroidManifest.xml | head -1)
           if [ -n "$MANIFEST" ]; then
@@ -62,6 +69,21 @@ jobs:
           echo '--- verification ---'
           grep -RIn 'minSdk' android/app/build.gradle* || true
           grep -RIn 'android:label\|app_name' "$MANIFEST" "$STRINGS" 2>/dev/null || true
+
+      - name: Ensure release signing (debug keystore)
+        run: |
+          ok=0
+          for f in android/app/build.gradle android/app/build.gradle.kts; do
+            [ -f "$f" ] || continue
+            echo "--- signingConfig in $f ---"
+            grep -n 'signingConfig' "$f" || true
+            grep -qE 'signingConfig.*debug' "$f" && ok=1
+          done
+          if [ "$ok" != 1 ]; then
+            echo "::error::buildTypes.release is not wired to signingConfigs.debug"
+            exit 1
+          fi
+          echo 'OK: release buildType signs with the (cached, stable) debug keystore'
 
       - name: Enable core library desugaring
         run: |
@@ -126,11 +148,15 @@ jobs:
         id: test
         run: flutter test
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build release APK (fat, all ABIs)
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Show APK info
-        run: ls -lh build/app/outputs/flutter-apk/ && sha256sum build/app/outputs/flutter-apk/app-release.apk
+        run: |
+          ls -lh build/app/outputs/flutter-apk/
+          sha256sum build/app/outputs/flutter-apk/app-release.apk
+          echo '--- ABIs included (fat APK) ---'
+          unzip -l build/app/outputs/flutter-apk/app-release.apk | grep -oE 'lib/[^/]+' | sort -u
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
