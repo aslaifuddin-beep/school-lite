@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:school_lite/core/l10n/app_strings.dart';
@@ -74,5 +74,6 @@ void main() {
     expect(find.byType(LockScreen), findsNothing);
     expect(find.textContaining(AppStrings.welcomeBack), findsWidgets);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 }

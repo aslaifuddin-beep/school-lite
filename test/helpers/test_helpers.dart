@@ -107,3 +107,11 @@ Widget appWithContainer(ProviderContainer container) =>
       container: container,
       child: const SchoolApp(),
     );
+
+/// إنهاء اختبار واجهة اشتركت في streams القاعدة: إفراغ الشجرة ثم مهلة
+/// صغيرة تُطلق مؤقّتات إغلاق drift (markAsClosed). بدونها يبقى المؤقّت
+/// معلّقاً في FakeAsync عند تخلص الاختبار فيغلقه close() إلى ما لا نهاية.
+Future<void> unmountTree(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pump(const Duration(milliseconds: 10));
+}

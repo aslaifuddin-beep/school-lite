@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:school_lite/core/db/app_database.dart';
@@ -54,6 +54,7 @@ void main() {
     expect(find.text(AppStrings.noUpcomingAssignments), findsOneWidget);
     expect(find.text(AppStrings.noNotifications), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 
   testWidgets('الرئيسية تعرض واجباً قادماً وتفتح ورقة التسليم', (tester) async {
@@ -83,6 +84,7 @@ void main() {
     await _pump(tester, 3);
     expect(find.text(AppStrings.submitOffline), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 
   testWidgets('الواجبات: فراغ ← واجب مع فلاتر ← فتح ورقة التسليم',
@@ -124,6 +126,7 @@ void main() {
     await _pump(tester, 4);
     expect(find.text(AppStrings.submitOffline), findsNothing);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 
   testWidgets('الإشعارات: عرض + زر تحديد الكل كمقروء', (tester) async {
@@ -168,6 +171,7 @@ void main() {
       findsNothing,
     );
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 
   testWidgets('تفاصيل المقرر: فراغ عند غياب الأقسام', (tester) async {
@@ -187,5 +191,6 @@ void main() {
     expect(find.text('ستظهر أقسام المقرر ووحداته بعد المزامنة الأولى.'),
         findsOneWidget);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 }

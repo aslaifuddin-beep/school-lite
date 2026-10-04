@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:school_lite/core/l10n/app_strings.dart';
@@ -29,6 +29,7 @@ void main() {
 
     // لا أخطاء تجاوز/ترتيب في النصوص العربية.
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 
   testWidgets('إضافة حساب تجريبي ينقل إلى الهيكل الرئيسي العربي',
@@ -52,5 +53,6 @@ void main() {
     expect(find.text(AppStrings.navNotifications), findsOneWidget);
     expect(find.text(AppStrings.navSettings), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await unmountTree(tester);
   });
 }

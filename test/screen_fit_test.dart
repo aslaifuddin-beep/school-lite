@@ -56,6 +56,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
       }
+
+      await unmountTree(tester);
     });
   }
 
