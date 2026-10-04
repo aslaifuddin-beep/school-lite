@@ -80,7 +80,10 @@ void configureMoodleDio(Dio dio) {
   dio.httpClientAdapter = IOHttpClientAdapter(
     createHttpClient: () {
       return HttpClient()
-        ..badCertificateCallback = (X509Certificate cert, String host, int port) => true
+        ..badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+              return true;
+            }
         ..followRedirects = true
         ..maxRedirects = 5;
     },

@@ -104,7 +104,9 @@ class MoodleAuthService {
     try {
       final client = HttpClient()
         ..badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true
+            (X509Certificate cert, String host, int port) {
+              return true;
+            }
         ..followRedirects = false
         ..connectionTimeout = const Duration(seconds: 15);
       try {

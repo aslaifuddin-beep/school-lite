@@ -56,7 +56,11 @@ void main() {
       courseId: '${account.id}:1',
       moodleId: 50,
       name: 'واجب العلوم',
+      intro: '',
       dueAt: DateTime.now().add(const Duration(hours: 6)),
+      allowLateSubmit: true,
+      status: 'not_submitted',
+      pendingSync: false,
       updatedAt: DateTime.now(),
     ));
 
@@ -84,7 +88,11 @@ void main() {
       courseId: '${account.id}:1',
       moodleId: 77,
       name: 'واجب الرياضيات',
+      intro: '',
       dueAt: DateTime.now().add(const Duration(hours: 5)),
+      allowLateSubmit: true,
+      status: 'not_submitted',
+      pendingSync: false,
       updatedAt: DateTime.now(),
     ));
     await tester.pumpAndSettle();
@@ -116,12 +124,15 @@ void main() {
       accountId: account.id,
       title: 'أول إشعار',
       body: 'نص أول إشعار',
+      isRead: false,
       createdAt: DateTime.now(),
     ));
     await db.into(db.localNotifications).insert(LocalNotification(
       id: '${account.id}:n2',
       accountId: account.id,
       title: 'ثاني إشعار',
+      body: '',
+      isRead: false,
       createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
     ));
 

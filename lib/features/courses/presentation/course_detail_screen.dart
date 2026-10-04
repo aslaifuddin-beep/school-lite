@@ -220,7 +220,7 @@ class _ModuleTileState extends ConsumerState<_ModuleTile> {
     if (path.toLowerCase().endsWith('.pdf')) {
       Navigator.of(context).pushNamed(
         AppRoutes.pdfViewer,
-        args: PdfViewerArgs(path: path, title: _m.name),
+        arguments: PdfViewerArgs(path: path, title: _m.name),
       );
       return;
     }
@@ -230,7 +230,7 @@ class _ModuleTileState extends ConsumerState<_ModuleTile> {
   Future<void> _openExternal(String target) async {
     try {
       final result = await OpenFilex.open(target);
-      if (result.type != OpenResultType.done) _snack(AppStrings.error);
+      if (result.type != ResultType.done) _snack(AppStrings.error);
     } catch (_) {
       _snack(AppStrings.error);
     }

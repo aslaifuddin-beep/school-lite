@@ -11,6 +11,10 @@ Assignment _assignment(String acc, int moodleId, String name, DateTime now) {
     courseId: '$acc:1',
     moodleId: moodleId,
     name: name,
+    intro: '',
+    allowLateSubmit: true,
+    status: 'not_submitted',
+    pendingSync: false,
     updatedAt: now,
   );
 }
@@ -33,12 +37,16 @@ void main() {
       id: 'acc-a:n1',
       accountId: 'acc-a',
       title: 'إشعار أ',
+      body: '',
+      isRead: false,
       createdAt: now,
     ));
     await db.into(db.localNotifications).insert(LocalNotification(
       id: 'acc-b:n2',
       accountId: 'acc-b',
       title: 'إشعار ب',
+      body: '',
+      isRead: false,
       createdAt: now,
     ));
     await db.into(db.courseSections).insert(CourseSection(
@@ -47,6 +55,9 @@ void main() {
       courseId: 'acc-a:c1',
       moodleId: 1,
       title: 'قسم أ',
+      summary: '',
+      orderIndex: 0,
+      visible: true,
     ));
     // قسم من حساب ب يستخدم courseId نفسه — يجب ألا يظهر لأ.
     await db.into(db.courseSections).insert(CourseSection(
@@ -55,6 +66,9 @@ void main() {
       courseId: 'acc-a:c1',
       moodleId: 2,
       title: 'قسم ب مخترق',
+      summary: '',
+      orderIndex: 1,
+      visible: true,
     ));
 
     final assignments = Daos(db);

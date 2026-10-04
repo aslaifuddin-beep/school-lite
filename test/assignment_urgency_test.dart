@@ -14,9 +14,11 @@ Assignment _assignment({
     courseId: 'acc-1:5',
     moodleId: 10,
     name: 'واجب تجريبي',
+    intro: '',
     dueAt: dueAt,
-    pendingSync: pendingSync,
+    allowLateSubmit: true,
     status: status,
+    pendingSync: pendingSync,
     updatedAt: now,
   );
 }

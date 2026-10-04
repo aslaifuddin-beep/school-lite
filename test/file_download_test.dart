@@ -38,9 +38,14 @@ void main() {
       sectionId: 'acc:s',
       moodleId: 9,
       name: 'مذكرة',
+      modType: 'resource',
+      intro: '',
       fileUrl: null, // يُضبط أدناه بمنفذ الخادم الديناميكي
       filename: 'note.pdf',
       fileSize: 2048,
+      orderIndex: 0,
+      available: true,
+      isDownloaded: false,
     );
     final moduleWithUrl = CourseModule(
       id: module.id,
@@ -49,9 +54,14 @@ void main() {
       sectionId: module.sectionId,
       moodleId: module.moodleId,
       name: module.name,
+      modType: module.modType,
+      intro: module.intro,
       fileUrl: 'http://127.0.0.1:${server.port}/files/note.pdf',
       filename: module.filename,
       fileSize: module.fileSize,
+      orderIndex: module.orderIndex,
+      available: module.available,
+      isDownloaded: module.isDownloaded,
     );
     await db.into(db.courseModules).insert(moduleWithUrl);
 
@@ -114,8 +124,13 @@ void main() {
       sectionId: 'acc:s',
       moodleId: 404,
       name: 'ملف مفقود',
+      modType: 'resource',
+      intro: '',
       fileUrl: 'http://127.0.0.1:1/missing.pdf',
       filename: 'missing.pdf',
+      orderIndex: 0,
+      available: true,
+      isDownloaded: false,
     );
     await db.into(db.courseModules).insert(module);
 
