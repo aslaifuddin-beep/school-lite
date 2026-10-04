@@ -23,7 +23,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _serverController = TextEditingController(text: 'https://demo.moodle.net');
+  final _serverController = TextEditingController(text: 'https://moodle.unrwa.org');
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -183,7 +183,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           );
 
       await ref.read(accountsProvider.notifier).add(
-            serverUrl: UrlUtils.normalizeServerUrl(_serverController.text),
+            // الرابط المُكتشف بعد متابعة التوجيهات (يحوي المجلد الفرعي
+            // مثل /moodle) — كي تنجح المزامنة على المسار الصحيح.
+            serverUrl: result.baseUrl,
             username: _usernameController.text.trim(),
             displayName: result.fullName.isNotEmpty
                 ? result.fullName

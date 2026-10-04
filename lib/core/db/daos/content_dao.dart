@@ -61,6 +61,21 @@ class ContentDao {
     return query.get();
   }
 
+  /// تعليم وحدة كـ«مُنزَّلة» مع مسارها المحلي (أو إلغاء التعليم).
+  Future<void> markModuleDownloaded({
+    required String accountId,
+    required String moduleId,
+    required String localPath,
+    required bool downloaded,
+  }) async {
+    await (db.update(db.courseModules)
+          ..where((t) => t.id.equals(moduleId) & t.accountId.equals(accountId)))
+        .write(CourseModulesCompanion(
+      localPath: Value(localPath),
+      isDownloaded: Value(downloaded),
+    ));
+  }
+
   // --------------------------------------------------------------- الكتابة
   /// استبدال بيانات مقرر كاملة (مقرّر + أقسامه + وحداته) ذرياً.
   Future<void> replaceCourse({

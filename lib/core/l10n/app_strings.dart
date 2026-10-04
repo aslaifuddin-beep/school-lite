@@ -26,7 +26,7 @@ abstract final class AppStrings {
   static const loginTitle = 'تسجيل الدخول';
   static const loginSubtitle = 'أضف حساب الطالب للبدء';
   static const serverUrl = 'رابط المنصة';
-  static const serverUrlHint = 'مثال: https://school.mysite.edu';
+  static const serverUrlHint = 'مثال: https://moodle.unrwa.org';
   static const username = 'اسم المستخدم';
   static const password = 'كلمة المرور';
   static const signIn = 'دخول';
@@ -38,6 +38,11 @@ abstract final class AppStrings {
   static const demoAccountName = 'طالب تجريبي';
   static const networkError = 'تعذّر الاتصال بالخادم — تحقق من الإنترنت';
   static const serviceDisabled = 'خدمات الويب (Web Services) غير مفعّلة على الخادم';
+  static const sslError =
+      'فشل التحقق من شهادة الخادم (SSL) — تحقق من إعدادات الشبكة وتاريخ الجهاز';
+  static const httpError = 'رد غير متوقع من الخادم — حاول مرة أخرى لاحقاً';
+  static const badEndpoint =
+      'تعذّر العثور على خدمة Moodle على هذا الرابط — تحقق من عنوان المنصة';
 
   // إدارة الحسابات المتعددة
   static const accounts = 'الحسابات';
@@ -115,6 +120,27 @@ abstract final class AppStrings {
   static const timeLeft = 'المتبقي';
   static const overdue = 'متأخر';
   static const draftAnswer = 'اكتب إجابتك هنا…';
+  static const todaysTasks = 'مهام اليوم';
+  static const dueSoonLabel = 'يستحق خلال 24 ساعة';
+  static const notSubmitted = 'لم يُسلَّم';
+  static const graded = 'مُقيَّم';
+  static const noDueDate = 'بلا موعد محدد';
+  static const allTasks = 'الكل';
+  static const dueSoonTasks = 'قريبة';
+  static const upcomingTasks = 'قادمة';
+  static const gradeLabel = 'الدرجة';
+  static const answerRequired = 'اكتب إجابة أو أرفق ملفاً أولاً';
+  static const pickFileFailed = 'تعذّر اختيار الملفات';
+  static const cameraCaptureFailed = 'تعذّر التقاط الصورة';
+  static const removeAttachment = 'إزالة المرفق';
+
+  // المحتوى المحلي (التنزيل والعرض دون إنترنت)
+  static const savedOffline = 'محفوظ محلياً';
+  static const downloadFile = 'تنزيل للعرض دون إنترنت';
+  static const downloading = 'جارٍ التنزيل…';
+  static const downloadFailed = 'فشل التنزيل — حاول عند توفر الشبكة';
+  static const openFile = 'فتح الملف';
+  static const offlineReady = 'الملفات المحفوظة متاحة دون إنترنت';
 
   // الإشعارات
   static const notifications = 'الإشعارات';

@@ -46,10 +46,9 @@ class MoodleContentSource implements ContentSource {
       }
       return decoded;
     } on DioException catch (e) {
-      final net = isNetworkError(e);
       throw MoodleSourceException(
-        AppStrings.networkError,
-        isNetwork: net,
+        messageForDioError(e),
+        isNetwork: isNetworkError(e),
         errorCode: e.response?.statusCode?.toString(),
       );
     }
@@ -310,10 +309,9 @@ class MoodleContentSource implements ContentSource {
       }
       return returned ?? itemid;
     } on DioException catch (e) {
-      final net = isNetworkError(e);
       throw MoodleSourceException(
-        AppStrings.networkError,
-        isNetwork: net,
+        messageForDioError(e),
+        isNetwork: isNetworkError(e),
         errorCode: e.response?.statusCode?.toString(),
       );
     }
