@@ -107,11 +107,12 @@ class MoodleAuthService {
             (X509Certificate cert, String host, int port) {
               return true;
             }
-        ..followRedirects = false
         ..connectionTimeout = const Duration(seconds: 15);
       try {
         for (var hop = 0; hop <= 5; hop++) {
           final req = await client.getUrl(current);
+          // نتتبّع التوجيهات يدوياً (التوجيهات هنا قد تغيّر المخطط http/https).
+          req.followRedirects = false;
           final resp = await req.close();
           await resp.drain<void>();
           if (!resp.isRedirect) break;

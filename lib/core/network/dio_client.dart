@@ -79,13 +79,13 @@ String messageForDioError(DioException e) {
 void configureMoodleDio(Dio dio) {
   dio.httpClientAdapter = IOHttpClientAdapter(
     createHttpClient: () {
+      // تجاوز الشهادة فقط — متابعة التوجيهات في مستوى الطلب (الافتراضي:
+      // followRedirects=true وmaxRedirects=5 كما تريده خدمات Moodle).
       return HttpClient()
         ..badCertificateCallback =
             (X509Certificate cert, String host, int port) {
               return true;
-            }
-        ..followRedirects = true
-        ..maxRedirects = 5;
+            };
     },
   );
   dio.options.headers.addAll(const {
