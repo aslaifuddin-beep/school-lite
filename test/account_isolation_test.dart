@@ -72,18 +72,18 @@ void main() {
     ));
 
     final assignments = Daos(db);
-    final forA = await assignments.assignments.watchAll('acc-a').first;
+    final forA = await assignments.assignments.watchAll('acc-a').first.timeout(const Duration(seconds: 20));
     expect(forA.map((a) => a.name), ['واجب أ']);
-    final forB = await assignments.assignments.watchAll('acc-b').first;
+    final forB = await assignments.assignments.watchAll('acc-b').first.timeout(const Duration(seconds: 20));
     expect(forB.map((a) => a.name), ['واجب ب']);
 
-    final notesA = await assignments.notifications.watchAll('acc-a').first;
+    final notesA = await assignments.notifications.watchAll('acc-a').first.timeout(const Duration(seconds: 20));
     expect(notesA.single.title, 'إشعار أ');
-    final notesB = await assignments.notifications.watchAll('acc-b').first;
+    final notesB = await assignments.notifications.watchAll('acc-b').first.timeout(const Duration(seconds: 20));
     expect(notesB.single.title, 'إشعار ب');
 
     final sectionsA =
-        await assignments.content.watchSections('acc-a', 'acc-a:c1').first;
+        await assignments.content.watchSections('acc-a', 'acc-a:c1').first.timeout(const Duration(seconds: 20));
     expect(sectionsA.single.title, 'قسم أ');
     expect(sectionsA.any((s) => s.title.contains('ب')), isFalse);
   });

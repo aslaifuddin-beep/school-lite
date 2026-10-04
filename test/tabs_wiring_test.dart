@@ -21,13 +21,25 @@ Widget _wrap(ProviderContainer container, Widget child) {
   );
 }
 
+/// ضخّات محدّدة بدل pumpAndSettle (لا تعليق مهما كان عدد الإطارات).
+Future<void> _pump(WidgetTester tester, [int times = 2]) async {
+  for (var i = 0; i < times; i++) {
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+  }
+}
+
 void main() {
-  Future<void> pumpLarge(WidgetTester tester, ProviderContainer c, Widget w) async {
+  Future<void> pumpLarge(
+    WidgetTester tester,
+    ProviderContainer c,
+    Widget w,
+  ) async {
     tester.view.physicalSize = const Size(1080, 2200);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(_wrap(c, w));
-    await tester.pumpAndSettle();
+    await _pump(tester, 3);
   }
 
   testWidgets('الرئيسية تعرض أقسامها الثلاثة مع حالات الفراغ', (tester) async {
@@ -68,12 +80,13 @@ void main() {
 
     expect(find.text('واجب العلوم'), findsWidgets);
     await tester.tap(find.text('واجب العلوم').first);
-    await tester.pumpAndSettle();
+    await _pump(tester, 3);
     expect(find.text(AppStrings.submitOffline), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('الواجبات: فراغ ← واجب مع فلاتر ← فتح ورقة التسليم', (tester) async {
+  testWidgets('الواجبات: فراغ ← واجب مع فلاتر ← فتح ورقة التسليم',
+      (tester) async {
     final c = await createContainer();
     await addDemoAccount(c, name: 'طالب تجريبي');
     final db = c.read(databaseProvider);
@@ -95,7 +108,7 @@ void main() {
       pendingSync: false,
       updatedAt: DateTime.now(),
     ));
-    await tester.pumpAndSettle();
+    await _pump(tester, 3);
 
     expect(find.text('واجب الرياضيات'), findsWidgets);
     expect(find.text(AppStrings.allTasks), findsOneWidget);
@@ -103,12 +116,12 @@ void main() {
     expect(find.text(AppStrings.upcomingTasks), findsOneWidget);
 
     await tester.tap(find.text('واجب الرياضيات').first);
-    await tester.pumpAndSettle();
+    await _pump(tester, 4);
     expect(find.text(AppStrings.submitOffline), findsOneWidget);
 
     // إغلاق الورقة بالنقر خارجها.
     await tester.tapAt(const Offset(8, 8));
-    await tester.pumpAndSettle();
+    await _pump(tester, 4);
     expect(find.text(AppStrings.submitOffline), findsNothing);
     expect(tester.takeException(), isNull);
   });
@@ -146,7 +159,7 @@ void main() {
     );
 
     await tester.tap(find.widgetWithText(TextButton, AppStrings.markAllRead));
-    await tester.pumpAndSettle();
+    await _pump(tester, 3);
 
     expect(
       find.widgetWithText(TextButton, AppStrings.markAllRead),
