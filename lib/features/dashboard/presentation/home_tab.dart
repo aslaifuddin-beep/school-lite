@@ -6,6 +6,7 @@ import '../../../core/db/daos.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/dates_ar.dart';
+import '../../../core/widgets/cached_stream_builder.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../accounts/application/accounts_providers.dart';
 import '../../accounts/domain/account.dart';
@@ -30,8 +31,9 @@ class HomeTab extends ConsumerWidget {
         _GreetingCard(account: account),
 
         // ------------------------------------------------ 1) واجبات قادمة
-        StreamBuilder<List<Assignment>>(
-          stream: daos.assignments.watchAll(account.id),
+        CachedStreamBuilder<List<Assignment>>(
+          cacheKey: account.id,
+          create: () => daos.assignments.watchAll(account.id),
           builder: (context, snap) {
             final all = snap.data ?? const <Assignment>[];
             final upcoming = all
@@ -72,8 +74,9 @@ class HomeTab extends ConsumerWidget {
         ),
 
         // ------------------------------------------------ 2) دروس اليوم
-        StreamBuilder<List<CalendarEvent>>(
-          stream: daos.calendar.watchUpcoming(account.id),
+        CachedStreamBuilder<List<CalendarEvent>>(
+          cacheKey: account.id,
+          create: () => daos.calendar.watchUpcoming(account.id),
           builder: (context, snap) {
             final now = DateTime.now();
             final startOfToday = DateTime(now.year, now.month, now.day);
@@ -109,8 +112,9 @@ class HomeTab extends ConsumerWidget {
         ),
 
         // ------------------------------------------------ 3) أحدث الإشعارات
-        StreamBuilder<List<LocalNotification>>(
-          stream: daos.notifications.watchAll(account.id),
+        CachedStreamBuilder<List<LocalNotification>>(
+          cacheKey: account.id,
+          create: () => daos.notifications.watchAll(account.id),
           builder: (context, snap) {
             final top =
                 (snap.data ?? const <LocalNotification>[]).take(3).toList();

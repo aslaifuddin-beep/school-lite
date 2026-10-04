@@ -10,7 +10,7 @@ import 'package:school_lite/features/courses/presentation/course_detail_screen.d
 import 'package:school_lite/features/dashboard/presentation/home_tab.dart';
 import 'package:school_lite/features/notifications/presentation/notifications_tab.dart';
 
-import '../../test/helpers/test_helpers.dart';
+import 'helpers/test_helpers.dart';
 
 Widget _wrap(ProviderContainer container, Widget child) {
   return UncontrolledProviderScope(

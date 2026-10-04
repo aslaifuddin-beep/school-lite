@@ -6,6 +6,7 @@ import '../../../core/db/daos.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/cached_stream_builder.dart';
 import '../../accounts/application/accounts_providers.dart';
 import '../../dashboard/presentation/main_shell.dart';
 import 'course_detail_screen.dart';
@@ -26,8 +27,9 @@ class CoursesTab extends ConsumerWidget {
       children: [
         const TabHeader(title: AppStrings.myCourses),
         Expanded(
-          child: StreamBuilder<List<Course>>(
-            stream: daos.content.watchCourses(account.id),
+          child: CachedStreamBuilder<List<Course>>(
+            cacheKey: account.id,
+            create: () => daos.content.watchCourses(account.id),
             builder: (context, snap) {
               if (snap.hasError) {
                 return const TabEmpty(

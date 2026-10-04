@@ -6,6 +6,7 @@ import '../../../core/db/daos.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/dates_ar.dart';
+import '../../../core/widgets/cached_stream_builder.dart';
 import '../../accounts/application/accounts_providers.dart';
 import '../../dashboard/presentation/main_shell.dart';
 
@@ -19,8 +20,9 @@ class NotificationsTab extends ConsumerWidget {
     if (account == null) return const SizedBox.shrink();
     final daos = ref.watch(daosProvider);
 
-    return StreamBuilder<List<LocalNotification>>(
-      stream: daos.notifications.watchAll(account.id),
+    return CachedStreamBuilder<List<LocalNotification>>(
+      cacheKey: account.id,
+      create: () => daos.notifications.watchAll(account.id),
       builder: (context, snap) {
         if (snap.hasError) {
           return const Column(

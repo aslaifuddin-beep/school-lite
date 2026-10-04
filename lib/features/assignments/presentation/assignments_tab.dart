@@ -11,6 +11,7 @@ import '../../../core/db/daos.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/dates_ar.dart';
+import '../../../core/widgets/cached_stream_builder.dart';
 import '../../accounts/application/accounts_providers.dart';
 import '../../accounts/domain/account.dart';
 import '../../dashboard/presentation/main_shell.dart';
@@ -44,8 +45,9 @@ class _AssignmentsTabState extends ConsumerState<AssignmentsTab> {
       children: [
         const TabHeader(title: AppStrings.assignments),
         Expanded(
-          child: StreamBuilder<List<Assignment>>(
-            stream: daos.assignments.watchAll(account.id),
+          child: CachedStreamBuilder<List<Assignment>>(
+            cacheKey: account.id,
+            create: () => daos.assignments.watchAll(account.id),
             builder: (context, snap) {
               if (snap.hasError) {
                 return const TabEmpty(

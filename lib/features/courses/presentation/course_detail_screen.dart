@@ -8,6 +8,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/url_utils.dart';
+import '../../../core/widgets/cached_stream_builder.dart';
 import '../../accounts/application/accounts_providers.dart';
 import '../../dashboard/presentation/main_shell.dart';
 import '../data/file_download_service.dart';
@@ -39,8 +40,9 @@ class CourseDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(args.title, maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
-      body: StreamBuilder<List<CourseSection>>(
-        stream: daos.content.watchSections(account.id, args.id),
+      body: CachedStreamBuilder<List<CourseSection>>(
+        cacheKey: '${account.id}|${args.id}',
+        create: () => daos.content.watchSections(account.id, args.id),
         builder: (context, snap) {
           if (snap.hasError) {
             return const TabEmpty(
@@ -107,8 +109,9 @@ class _SectionBlock extends StatelessWidget {
               ),
             ),
           ),
-        StreamBuilder<List<CourseModule>>(
-          stream: daos.content.watchModules(accountId, section.id),
+        CachedStreamBuilder<List<CourseModule>>(
+          cacheKey: '$accountId|${section.id}',
+          create: () => daos.content.watchModules(accountId, section.id),
           builder: (context, snap) {
             if (snap.hasError) return const SizedBox.shrink();
             final modules = snap.data ?? const <CourseModule>[];
