@@ -62,7 +62,7 @@ void main() {
     final db = c.read(databaseProvider);
     final account = c.read(activeAccountProvider)!;
 
-    await db.into(db.assignments).insert(Assignment(
+    await tester.runAsync(() => db.into(db.assignments).insert(Assignment(
       id: '${account.id}:50',
       accountId: account.id,
       courseId: '${account.id}:1',
@@ -74,7 +74,7 @@ void main() {
       status: 'not_submitted',
       pendingSync: false,
       updatedAt: DateTime.now(),
-    ));
+    )));
 
     await pumpLarge(tester, c, const HomeTab());
 
@@ -95,7 +95,7 @@ void main() {
     await pumpLarge(tester, c, const AssignmentsTab());
     expect(find.text(AppStrings.noAssignments), findsOneWidget);
 
-    await db.into(db.assignments).insert(Assignment(
+    await tester.runAsync(() => db.into(db.assignments).insert(Assignment(
       id: '${account.id}:77',
       accountId: account.id,
       courseId: '${account.id}:1',
@@ -107,7 +107,7 @@ void main() {
       status: 'not_submitted',
       pendingSync: false,
       updatedAt: DateTime.now(),
-    ));
+    )));
     await _pump(tester, 3);
 
     expect(find.text('واجب الرياضيات'), findsWidgets);
@@ -132,22 +132,24 @@ void main() {
     final db = c.read(databaseProvider);
     final account = c.read(activeAccountProvider)!;
 
-    await db.into(db.localNotifications).insert(LocalNotification(
-      id: '${account.id}:n1',
-      accountId: account.id,
-      title: 'أول إشعار',
-      body: 'نص أول إشعار',
-      isRead: false,
-      createdAt: DateTime.now(),
-    ));
-    await db.into(db.localNotifications).insert(LocalNotification(
-      id: '${account.id}:n2',
-      accountId: account.id,
-      title: 'ثاني إشعار',
-      body: '',
-      isRead: false,
-      createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
-    ));
+    await tester.runAsync(() async {
+      await db.into(db.localNotifications).insert(LocalNotification(
+        id: '${account.id}:n1',
+        accountId: account.id,
+        title: 'أول إشعار',
+        body: 'نص أول إشعار',
+        isRead: false,
+        createdAt: DateTime.now(),
+      ));
+      await db.into(db.localNotifications).insert(LocalNotification(
+        id: '${account.id}:n2',
+        accountId: account.id,
+        title: 'ثاني إشعار',
+        body: '',
+        isRead: false,
+        createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
+      ));
+    });
 
     await pumpLarge(tester, c, const NotificationsTab());
 

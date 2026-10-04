@@ -71,10 +71,12 @@ void main() {
       documentsDir: () async => temp,
     );
 
-    final path = await service.downloadModule(
-      accountId: 'acc',
-      module: moduleWithUrl,
-    );
+    final path = await service
+        .downloadModule(
+          accountId: 'acc',
+          module: moduleWithUrl,
+        )
+        .timeout(const Duration(seconds: 45));
 
     final file = File(path);
     expect(await file.exists(), isTrue);
@@ -141,7 +143,9 @@ void main() {
     );
 
     await expectLater(
-      service.downloadModule(accountId: 'acc', module: module),
+      service
+          .downloadModule(accountId: 'acc', module: module)
+          .timeout(const Duration(seconds: 45)),
       throwsA(isA<DioException>()),
     );
 

@@ -20,21 +20,26 @@ Future<HttpServer> _serve({
   return server;
 }
 
+/// مهلة حماية: لا اختبار يعلّق أبداً حتى لو تعطّل الخادم المحلي.
+Future<String> _resolve(String raw) {
+  return MoodleAuthService()
+      .resolveBaseUrl(raw)
+      .timeout(const Duration(seconds: 25));
+}
+
 void main() {
   group('MoodleAuthService.resolveBaseUrl', () {
     test('يتبع 302 حتى مجلد الفرعي /moodle', () async {
       final server = await _serve(handler: (req) {
         if (req.uri.path == '/') {
-          req.response.headers
-              .set(HttpHeaders.locationHeader, '/moodle/');
+          req.response.headers.set(HttpHeaders.locationHeader, '/moodle/');
           return 302;
         }
         return 200;
       });
       final base = 'http://127.0.0.1:${server.port}';
 
-      final service = MoodleAuthService();
-      final resolved = await service.resolveBaseUrl(base);
+      final resolved = await _resolve(base);
 
       expect(resolved, '$base/moodle');
     });
@@ -50,7 +55,7 @@ void main() {
       });
       final base = 'http://127.0.0.1:${server.port}';
 
-      final resolved = await MoodleAuthService().resolveBaseUrl(base);
+      final resolved = await _resolve(base);
 
       expect(resolved, '$base/moodle');
     });
@@ -59,21 +64,19 @@ void main() {
       final server = await _serve(handler: (_) => 200);
       final base = 'http://127.0.0.1:${server.port}';
 
-      final resolved = await MoodleAuthService().resolveBaseUrl(base);
+      final resolved = await _resolve(base);
 
       expect(resolved, base);
     });
 
     test('خادم مُتعذر ← يُرجع المُطبَّع دون استثناء', () async {
-      final resolved =
-          await MoodleAuthService().resolveBaseUrl('http://127.0.0.1:1');
+      final resolved = await _resolve('http://127.0.0.1:1');
       expect(resolved, 'http://127.0.0.1:1');
     });
 
     test('دخل بدون مخطط يُطبَّع إلى https ثم يبقى كما هو عند الفشل',
         () async {
-      final resolved =
-          await MoodleAuthService().resolveBaseUrl('127.0.0.1:1');
+      final resolved = await _resolve('127.0.0.1:1');
       expect(resolved, 'https://127.0.0.1:1');
     });
   });
